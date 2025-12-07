@@ -18,7 +18,8 @@
    - Thread pinning (schema support, display only)
    - Thread locking (schema support, display only)
    - View count tracking (increments on thread view, works for all users)
-   - Thread listing with author and timestamps
+   - Thread updated timestamp (updates when new replies are posted)
+   - Thread listing with author and timestamps (ordered by updatedAt)
 
 4. **Posts/Replies**
    - Create replies to threads
@@ -55,10 +56,10 @@
 - **Why Critical**: Basic engagement metric
 - **Effort**: Low
 
-#### 1.3 Thread Updated Timestamp
-- **Status**: Schema has `updatedAt` but not updated on new replies
-- **Missing**: Update `updatedAt` when new reply is posted (currently commented out)
-- **Why Critical**: Shows which threads have recent activity
+#### 1.3 Thread Updated Timestamp ✅ **COMPLETED**
+- **Status**: ✅ Implemented - Thread `updatedAt` automatically updates when new replies are posted
+- **Implementation**: Server action `updateThreadUpdatedAt` called after post creation, updates thread timestamp to current time
+- **Why Critical**: Shows which threads have recent activity (threads are ordered by `updatedAt` in forum listings)
 - **Effort**: Low
 
 #### 1.4 Forum Statistics Display
@@ -317,7 +318,7 @@
 
 ### Phase 1: Foundation (Weeks 1-2)
 1. ✅ **COMPLETED** View count tracking (increment on thread view)
-2. ⏳ Thread updated timestamp (update on new reply)
+2. ✅ **COMPLETED** Thread updated timestamp (update on new reply)
 3. ⏳ Forum statistics (thread/post counts, last post info)
 4. ⏳ Thread statistics (post count, last reply info)
 5. ⏳ Basic moderation UI (lock/unlock, pin/unpin threads)
@@ -362,7 +363,7 @@
 ## Quick Wins (Low Effort, High Impact)
 
 1. ✅ **COMPLETED** View count increment - Implemented on thread page
-2. **Thread updated timestamp** - Uncomment and fix the update
+2. ✅ **COMPLETED** Thread updated timestamp - Implemented when replies are posted
 3. **Lock/Pin UI** - Add buttons for admins on thread pages
 4. **Post count display** - Add to thread listings
 5. **Last post info** - Add to forum/thread listings
@@ -397,8 +398,8 @@
 
 ## Summary
 
-**Current State**: NextBB has a solid foundation with basic forum functionality. View count tracking has been implemented. Many essential features are still missing that users expect from modern forum software.
+**Current State**: NextBB has a solid foundation with basic forum functionality. View count tracking and thread updated timestamps have been implemented. Many essential features are still missing that users expect from modern forum software.
 
-**Gap Analysis**: Approximately 29+ major features remaining, with core functionality gaps in editing, moderation, search, and statistics.
+**Gap Analysis**: Approximately 28+ major features remaining, with core functionality gaps in editing, moderation, search, and statistics.
 
 **Recommended Focus**: Prioritize Phase 1-3 features first, as they provide the essential functionality users need. Phase 4-6 can be added based on community feedback and usage patterns.

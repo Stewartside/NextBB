@@ -68,16 +68,26 @@ export async function createReply(prevState: any, formData: FormData) {
     }
   
     try {
+      // Get the forum ID from the thread before updating
+      const thread = await db.query.threads.findFirst({
+        where: eq(threads.id, threadId),
+      })
+
+      if (!thread) {
+        return { error: 'Thread not found.' }
+      }
+
       await db.insert(posts).values({
           threadId: threadId,
           authorId: user.id,
           content: content,
       })
       
-      // Update thread updated_at
-      // await db.update(threads).set({ updatedAt: new Date() }).where(eq(threads.id, threadId))
+      // Update thread updated_at when a new reply is posted
+      await updateThreadUpdatedAt(threadId)
       
       revalidatePath(`/thread/${threadId}`)
+      revalidatePath(`/forum/${thread.forumId}`) // Revalidate forum page to show updated thread order
     } catch (err: any) {
       console.error(err)
       return { error: 'Failed to post reply.' }
@@ -94,6 +104,19 @@ export async function incrementThreadViewCount(threadId: string) {
   } catch (err: any) {
     // Silently fail - view count is not critical
     console.error('Failed to increment view count:', err)
+  }
+}
+
+export async function updateThreadUpdatedAt(threadId: string) {
+  try {
+    // Update thread updated_at timestamp
+    await db
+      .update(threads)
+      .set({ updatedAt: new Date() })
+      .where(eq(threads.id, threadId))
+  } catch (err: any) {
+    // Log error but don't fail - thread update is not critical
+    console.error('Failed to update thread timestamp:', err)
   }
 }
 

@@ -58,10 +58,16 @@ export default async function ForumPage({ params }: { params: Promise<{ id: stri
                                         {thread.title}
                                     </Link>
                                 </div>
-                                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-2">
                                     <span>by <span className="font-medium text-foreground">{thread.author.username}</span></span>
                                     <span>•</span>
-                                    <span>{formatDistanceToNow(thread.createdAt)} ago</span>
+                                    <span>Created {formatDistanceToNow(thread.createdAt)} ago</span>
+                                    {thread.updatedAt.getTime() !== thread.createdAt.getTime() && (
+                                        <>
+                                            <span>•</span>
+                                            <span>Updated {formatDistanceToNow(thread.updatedAt)} ago</span>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                             <div className="hidden sm:flex flex-col items-end text-sm text-muted-foreground min-w-[100px]">
