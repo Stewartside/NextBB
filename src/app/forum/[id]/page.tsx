@@ -22,7 +22,10 @@ export default async function ForumPage({ params }: { params: Promise<{ id: stri
 
   // Check if user is authenticated
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error } = await supabase.auth.getUser()
+  
+  // If there's an authentication error, treat as not authenticated
+  const isAuthenticated = !error && user
 
   // Fetch threads with author info
   const forumThreads = await db.query.threads.findMany({
@@ -40,7 +43,7 @@ export default async function ForumPage({ params }: { params: Promise<{ id: stri
             <h1 className="text-3xl font-bold tracking-tight">{forum.name}</h1>
             {forum.description && <p className="text-muted-foreground mt-1">{forum.description}</p>}
         </div>
-        {user && (
+        {isAuthenticated && (
           <Button asChild>
             <Link href={`/forum/${id}/new`}>Post New Thread</Link>
           </Button>
