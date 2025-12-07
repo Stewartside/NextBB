@@ -35,6 +35,7 @@ export const forums = pgTable('forums', {
   id: uuid('id').primaryKey().defaultRandom(),
   categoryId: uuid('category_id').references(() => categories.id).notNull(),
   name: text('name').notNull(),
+  shortCode: text('short_code'),
   description: text('description'),
   sortOrder: integer('sort_order').default(0).notNull(),
   isLocked: boolean('is_locked').default(false).notNull(),

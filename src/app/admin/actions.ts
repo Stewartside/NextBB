@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
 import { categories, forums, users } from '@/db/schema'
 import { eq } from 'drizzle-orm'
+import { generateUniqueShortCode } from '@/lib/utils/forum'
 
 // Helper to check if user is admin
 async function checkAdmin() {
@@ -50,8 +51,12 @@ export async function createForum(formData: FormData) {
     const sortOrder = parseInt(formData.get('sortOrder') as string) || 0
 
     try {
+        // Generate unique short code for the forum
+        const shortCode = await generateUniqueShortCode(name, categoryId)
+        
         await db.insert(forums).values({
             name,
+            shortCode,
             description,
             categoryId,
             sortOrder,

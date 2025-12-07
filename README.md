@@ -39,7 +39,7 @@ Create a `.env.local` file in the root directory and add the following environme
 
 ```bash
 # Database Connection (Transaction Mode is recommended for Serverless)
-DATABASE_URL="postgres://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:6543/postgres"
+DATABASE_URL="postgres://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
 
 # Supabase API Keys
 NEXT_PUBLIC_SUPABASE_URL="https://[YOUR-PROJECT-REF].supabase.co"

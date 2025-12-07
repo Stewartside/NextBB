@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# drizzle migrations - keep SQL and journal, ignore snapshots if desired
+# Uncomment the line below if you want to ignore snapshot files
+# supabase/migrations/meta/*_snapshot.json

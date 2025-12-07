@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator'
 import ReplyForm from './reply-form'
 import Link from 'next/link'
 import { incrementThreadViewCount } from '@/app/forum/actions'
+import { getForumUrlIdentifier } from '@/lib/utils/forum'
 
 export default async function ThreadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -43,7 +44,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
         <div className="flex items-center text-sm text-muted-foreground gap-2">
             <Link href="/" className="hover:underline">Forums</Link>
             <span>/</span>
-            <Link href={`/forum/${thread.forumId}`} className="hover:underline">{thread.forum.name}</Link>
+            <Link href={`/forum/${getForumUrlIdentifier(thread.forum)}`} className="hover:underline">{thread.forum.name}</Link>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">{thread.title}</h1>
       </div>

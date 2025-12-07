@@ -4,6 +4,7 @@ import { categories, forums } from '@/db/schema'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { eq, asc } from 'drizzle-orm'
 import { MessageSquare } from 'lucide-react'
+import { getForumUrlIdentifier } from '@/lib/utils/forum'
 
 export default async function HomePage() {
   const allCategories = await db.query.categories.findMany({
@@ -43,7 +44,7 @@ export default async function HomePage() {
                     </div>
                     <div className="flex-1">
                       <Link
-                        href={`/forum/${forum.id}`}
+                        href={`/forum/${getForumUrlIdentifier(forum)}`}
                         className="font-medium hover:underline text-lg block"
                       >
                         {forum.name}

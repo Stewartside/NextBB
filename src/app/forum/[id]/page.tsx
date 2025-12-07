@@ -8,17 +8,20 @@ import { formatDistanceToNow } from 'date-fns'
 import { Pin, Lock } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { findForumByIdentifier, getForumUrlIdentifier } from '@/lib/utils/forum'
 
 export default async function ForumPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const forum = await db.query.forums.findFirst({
-    where: eq(forums.id, id),
-  })
+  // Find forum by either ID or short_code
+  const forum = await findForumByIdentifier(id)
 
   if (!forum) {
     notFound()
   }
+  
+  // Get the URL identifier (prefer short_code)
+  const forumUrlId = getForumUrlIdentifier(forum)
 
   // Check if user is authenticated
   const supabase = await createClient()
@@ -27,9 +30,9 @@ export default async function ForumPage({ params }: { params: Promise<{ id: stri
   // If there's an authentication error, treat as not authenticated
   const isAuthenticated = !error && user
 
-  // Fetch threads with author info
+  // Fetch threads with author info (use forum.id, not the identifier)
   const forumThreads = await db.query.threads.findMany({
-    where: eq(threads.forumId, id),
+    where: eq(threads.forumId, forum.id),
     orderBy: [desc(threads.isPinned), desc(threads.updatedAt)],
     with: {
       author: true,
@@ -45,7 +48,7 @@ export default async function ForumPage({ params }: { params: Promise<{ id: stri
         </div>
         {isAuthenticated && (
           <Button asChild>
-            <Link href={`/forum/${id}/new`}>Post New Thread</Link>
+            <Link href={`/forum/${forumUrlId}/new`}>Post New Thread</Link>
           </Button>
         )}
       </div>
