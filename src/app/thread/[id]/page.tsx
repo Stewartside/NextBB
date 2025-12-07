@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import ReplyForm from './reply-form'
 import Link from 'next/link'
+import { incrementThreadViewCount } from '@/app/forum/actions'
 
 export default async function ThreadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -23,6 +24,9 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
   if (!thread) {
     notFound()
   }
+
+  // Increment view count (fire and forget - doesn't block page render)
+  incrementThreadViewCount(id)
 
   // Fetch posts in this thread
   const threadPosts = await db.query.posts.findMany({

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/db'
 import { threads, posts } from '@/db/schema'
+import { eq, sql } from 'drizzle-orm'
 
 export async function createThread(prevState: any, formData: FormData) {
   const supabase = await createClient()
@@ -82,4 +83,17 @@ export async function createReply(prevState: any, formData: FormData) {
       return { error: 'Failed to post reply.' }
     }
   }
+
+export async function incrementThreadViewCount(threadId: string) {
+  try {
+    // Increment view count atomically using SQL
+    await db
+      .update(threads)
+      .set({ viewCount: sql`view_count + 1` })
+      .where(eq(threads.id, threadId))
+  } catch (err: any) {
+    // Silently fail - view count is not critical
+    console.error('Failed to increment view count:', err)
+  }
+}
 
