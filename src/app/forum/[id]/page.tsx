@@ -7,6 +7,7 @@ import { eq, desc, sql } from 'drizzle-orm'
 import { formatDistanceToNow } from 'date-fns'
 import { Pin, Lock } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function ForumPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -18,6 +19,10 @@ export default async function ForumPage({ params }: { params: Promise<{ id: stri
   if (!forum) {
     notFound()
   }
+
+  // Check if user is authenticated
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
   // Fetch threads with author info
   const forumThreads = await db.query.threads.findMany({
@@ -35,9 +40,11 @@ export default async function ForumPage({ params }: { params: Promise<{ id: stri
             <h1 className="text-3xl font-bold tracking-tight">{forum.name}</h1>
             {forum.description && <p className="text-muted-foreground mt-1">{forum.description}</p>}
         </div>
-        <Button asChild>
-          <Link href={`/forum/${id}/new`}>Post New Thread</Link>
-        </Button>
+        {user && (
+          <Button asChild>
+            <Link href={`/forum/${id}/new`}>Post New Thread</Link>
+          </Button>
+        )}
       </div>
 
       <Card>
