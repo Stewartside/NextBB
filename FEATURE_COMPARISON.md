@@ -12,6 +12,7 @@
    - Categories with sort ordering
    - Forums within categories with sort ordering
    - Admin can create/delete categories and forums
+   - Shortcodes for urls
 
 3. **Threads**
    - Create threads with title and content
